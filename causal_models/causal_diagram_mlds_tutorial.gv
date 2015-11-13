@@ -1,0 +1,30 @@
+digraph G { 
+    #rankdir=LR
+    Ux [label=<U<SUB>X</SUB>>];
+    Uy [label=<U<SUB>Y</SUB>>];
+    Up [label=<U<SUB>P</SUB>>];
+    PriceX [label=<Price<SUB>X</SUB>>, style=filled];
+    CategoryX [label=<Category<SUB>X</SUB>>, style=filled];
+    PriceY [label=<Price<SUB>Y</SUB>>, style=filled];
+    CategoryY [label=<Category<SUB>Y</SUB>>, style=filled];
+    Sex [label=<Sex<SUB>P</SUB>>, style=filled];
+    Location [label=<Location<SUB>P</SUB>>, style=filled];
+    UserHistory [label=<History<SUB>P</SUB>>, style=filled];
+    UserProfile [label=<Profile<SUB>P</SUB>>, style=filled];
+    X [label=<Visit<SUB>X,P</SUB>>, style=filled];
+    Yr [label=<RecVisit<SUB>Y,P</SUB>>, style=filled];
+    {
+        rank=min
+        Ux -> Uy [style=dotted,dir="both"]
+    }
+    Ux -> X
+    Uy -> Yr
+    Up -> UserProfile
+    {rank=same Sex Location UserHistory} -> UserProfile
+    UserProfile -> {X Yr}
+    {rank=same PriceX CategoryX} -> X
+    {rank=same PriceY CategoryY} -> Yr
+    { rank=same
+    X -> Yr [label="Causal effect"]
+    }
+}
