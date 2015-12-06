@@ -1,15 +1,14 @@
 library(dplyr)
-library(tidyr)
+
 NUM_USERS = 10000
 NUM_PRODUCTS = 1000
-NUM_LOCATIONS=10
+NUM_LOCATIONS=4
 NUM_CATEGORIES=10
 NUM_VISITS=100
 PROB_XY_SAME_CATEGORY=0.8
+REC_VISITS_BASERATE = 0.1
+MAX_SHOWN_RECS = 3
 
-ret_rand_vector() <- function(start, end) {
-  runif()
-}
 Main <- function () {
   sex = rbinom(NUM_USERS, 1, 0.5)
   # NUM_LOCATIONS*N matrix: each column is a user
@@ -44,9 +43,26 @@ Main <- function () {
   visits_df = data.frame(user_id=user_ids, category=user_visit_categories)
   locations_df = data.frame(user_id=1:NUM_USERS, location=location_u)
   categories_df = data.frame(category=1:10, start=seq(1, 901,100), end=seq(100,1000,100))
-  user_visits = inner_join(visits_df, locations_df, by="user_id") %>%
+  temp_user_visits = 
+    inner_join(visits_df, locations_df, by="user_id") %>%
     inner_join(categories_df, by="category") %>%
-    mutate( product_id = ret_rand_vector(start, end))
+    mutate(product_id = floor(start + runif(length(start))*(end-start))
+    )
+  
+  user_visits = 
+    mutate(temp_user_visits,
+           is_rec_visit = 
+             ifelse(runif(length(start)) <= REC_VISITS_BASERATE*(location + (category %% 4)),1,0),
+           rec_rank = 
+             ifelse(is_rec_visit == 1, 
+                    floor(runif(length(start),min=1,max=MAX_SHOWN_RECS+1)),
+                    ifelse(runif(length(start)) <= 0.1,
+                           floor(runif(length(start), min=MAX_SHOWN_RECS+1, max=2*MAX_SHOWN_RECS+1)),
+                           -1
+                    )
+             )
+    ) %>% 
+    select(-start, -end)
   # A vector with the category number for recommended product
   category_y = ifelse(runif(N, min=0, max=1) < PROB_XY_SAME_CATEGORY, category_x, min(category_x +1, NUM_CATEGORIES))
   i=0
