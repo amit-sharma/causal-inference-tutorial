@@ -16,7 +16,7 @@ NUM_CATEGORIES=10 # Different app categories. E.g. productivity, game, music, et
 NUM_VISITS=100 # We sample equal number of visits by each user
 REC_VISITS_BASERATE = 0.05 # The lowest click-through rate for a recommendation
 MAX_SHOWN_RECS = 3 # Maximum number of recommendations shown in the Store interface.
-ALGORITHM = "B" # Possible values: A or B (corresponding to "A/B" test)
+ALGORITHM = "A" # Possible values: A or B (corresponding to "A/B" test)
 
 generate_activity_levels <- function(num_users, num_activity_levels, algorithm="A"){
   ret = NULL
@@ -31,7 +31,7 @@ generate_activity_levels <- function(num_users, num_activity_levels, algorithm="
   return(ret)
 }
 
-Main <- function () {
+generate_user_visits_dataset <- function () {
   ## GENERATING USER ATTRIBUTES: gender and level of activity.
   # Vector containing gender data (Male=1, Female=0) for each user.
   gender_u = rbinom(NUM_USERS, 1, 0.5)
@@ -130,7 +130,7 @@ Main <- function () {
     
     # Removing irrelevant columns.
     rel_user_visits = select(user_visits, 
-                             user_id, gender, activity_level,
+                             user_id, -gender, activity_level,
                              product_id, category, is_rec_visit, rec_rank,
                              -start, -end)
     write.csv(rel_user_visits, 

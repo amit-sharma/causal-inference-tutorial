@@ -55,18 +55,19 @@ Main <- function() {
   # Reading app visit logs for two different algorithms.
   user_app_visits_A = read.csv("user_app_visits_A.csv")
   user_app_visits_B = read.csv("user_app_visits_B.csv")
+  
   # GOAL 1: COMPARE ALGORITHM A VERSUS B
   # Naive estimate
   naive_observational_estimate(user_app_visits_A)
   naive_observational_estimate(user_app_visits_B)
   
+  # Stratified estimate (by user activity level)
+  stratified_by_activity_estimate(user_app_visits_A)
+  stratified_by_activity_estimate(user_app_visits_B)
+  
   # Stratified estimate (by app category)
   stratified_by_category_estimate(user_app_visits_A)
   stratified_by_category_estimate(user_app_visits_B)
-  
-  # Stratified estimate (by user activity level)
-  stratified_by_activity_estimate(user_app_visits_A)
-  stratified_by_activity_estimate(uuser_app_visits_B)
   
   # GOAL 2: FIND THE CAUSAL EFFECT OF SHOWING RECOMMENDATIONS
   # Regression discontinuity estimate for Algorithm A
