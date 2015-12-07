@@ -5,6 +5,7 @@
 # Library for easy manipulation of data frames.
 library(dplyr)
 
+MAX_SHOWN_RECS = 3
 naive_observational_estimate <- function(user_visits){
   # Naive observational estimate
   # Simply the fraction of visits that resulted in a recommendation click-through.
